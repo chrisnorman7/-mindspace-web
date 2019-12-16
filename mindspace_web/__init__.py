@@ -48,27 +48,30 @@ class WebApp(Klein):
     def __init__(self, *args, **kwargs):
         """Add an environment."""
         super().__init__(*args, **kwargs)
-        self.loader = FileSystemLoader(templates_dir)
+        self.loader = FileSystemLoader([
+            templates_dir,
+            os.path.join(os.getcwd(), 'templates')
+        ])
         self.environment = Environment(loader=self.loader)
         self.environment.filters['getmtime'] = os.path.getmtime
+        self.route('/')(self.index)
+        self.route('/mindspace.js/')(self.javascript)
 
-        @self.route('/')
-        def index(request):
-            try:
-                return self.render_template('index.html')
-            except TemplateNotFound:
-                return self.render_template('_index.html')
+    def index(self, request):
+        try:
+            return self.render_template('index.html')
+        except TemplateNotFound:
+            return self.render_template('_index.html')
 
-        @self.route('/mindspace.js/')
-        def javascript(request):
-            try:
-                return self.render_template(
-                    'mindspace.js', mindspace=self.mindspace_factory
-                )
-            except TemplateNotFound:
-                return self.render_template(
-                    '_mindspace.js', mindspace=self.mindspace_factory
-                )
+    def javascript(self, request):
+        try:
+            return self.render_template(
+                'mindspace.js', mindspace=self.mindspace_factory
+            )
+        except TemplateNotFound:
+            return self.render_template(
+                '_mindspace.js', mindspace=self.mindspace_factory
+            )
 
     def render_template(self, template, **kwargs):
         """Render a template, and return a string."""
