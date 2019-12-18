@@ -48,14 +48,20 @@ class WebApp(Klein):
     def __init__(self, *args, **kwargs):
         """Add an environment."""
         super().__init__(*args, **kwargs)
-        self.loader = FileSystemLoader([
-            templates_dir,
-            os.path.join(os.getcwd(), 'templates')
-        ])
-        self.environment = Environment(loader=self.loader)
+        self.environment = Environment(
+            loader=FileSystemLoader([
+                templates_dir,
+                os.path.join(os.getcwd(), 'templates')]
+            )
+        )
         self.environment.filters['getmtime'] = os.path.getmtime
         self.route('/')(self.index)
-        self.route('/mindspace.js/')(self.javascript)
+        self.route('/socketurl.js', branch=False)(self.javascript)
+
+    @property
+    def loader(self):
+        """Return the jinja2 loader for easy access."""
+        return self.environment.loader
 
     def index(self, request):
         try:
