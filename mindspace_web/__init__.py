@@ -11,6 +11,7 @@ from autobahn.twisted.websocket import (
 )
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 from klein import Klein
+from mindspace_protocol import MindspaceParser
 from twisted.internet import reactor
 from twisted.web.server import Site
 
@@ -32,7 +33,10 @@ class WebSocketProtocol(WebSocketServerProtocol):
         )
 
     def handle_command(self, command_name, *args, **kwargs):
-        raise NotImplementedError(command_name)
+        """Handle a command from the other side."""
+        return self.factory.mindspace_factory.parser.handle_command(
+            command_name, self, *args, **kwargs
+        )
 
     def handle_binary(self, payload):
         """Handle a binary payload."""
@@ -96,6 +100,7 @@ class WebApp(Klein):
 class MindspaceFactory:
     """The main object for creating mindspace projects."""
 
+    parser = attrib(default=Factory(lambda: MindspaceParser))
     interface = attrib(default=Factory(lambda: '0.0.0.0'))
     http_port = attrib(default=Factory(lambda: 6463))
     websocket_port = attrib(default=Factory(lambda: 6464))
