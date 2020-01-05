@@ -1,6 +1,5 @@
 attrs
 twisted
 autobahn
-mindspace-protocol
 klein
 jinja2
