@@ -3,3 +3,4 @@ twisted
 autobahn
 klein
 jinja2
+mindspace-protocol
