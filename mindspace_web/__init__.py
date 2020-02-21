@@ -100,7 +100,7 @@ class WebApp(Klein):
 class MindspaceFactory:
     """The main object for creating mindspace projects."""
 
-    parser = attrib(default=Factory(lambda: MindspaceParser))
+    parser = attrib(default=Factory(MindspaceParser))
     interface = attrib(default=Factory(lambda: '0.0.0.0'))
     http_port = attrib(default=Factory(lambda: 6463))
     websocket_port = attrib(default=Factory(lambda: 6464))
