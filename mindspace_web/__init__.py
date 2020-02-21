@@ -34,9 +34,8 @@ class WebSocketProtocol(WebSocketServerProtocol):
 
     def handle_command(self, command_name, *args, **kwargs):
         """Handle a command from the other side."""
-        return self.factory.mindspace_factory.get_parser(self).handle_command(
-            command_name, self, *args, **kwargs
-        )
+        parser = self.factory.mindspace_factory.get_parser(self)
+        return parser.handle_command(command_name, self, *args, **kwargs)
 
     def handle_binary(self, payload):
         """Handle a binary payload."""
