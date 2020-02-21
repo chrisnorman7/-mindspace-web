@@ -29,7 +29,7 @@ class WebSocketProtocol(WebSocketServerProtocol):
             return self.handle_binary(payload)
         command_name, command_args, command_kwargs = loads(payload)
         return self.handle_command(
-            command_name, self, *command_args, **command_kwargs
+            command_name, *command_args, **command_kwargs
         )
 
     def handle_command(self, command_name, *args, **kwargs):
