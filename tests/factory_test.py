@@ -15,3 +15,15 @@ def test_init(f):
     first, second = k.loader.searchpath
     assert first == os.path.join(os.path.dirname(mwf), 'templates')
     assert second == os.path.join(os.getcwd(), 'templates')
+
+
+def test_get_parser(f):
+    pretend_parser = object()
+    assert f.get_parser(None) is f.parser
+
+    class CustomMindspaceFactory(MindspaceFactory):
+        def get_parser(self, connection):
+            return pretend_parser
+
+    f = CustomMindspaceFactory()
+    assert f.get_parser(None) is pretend_parser

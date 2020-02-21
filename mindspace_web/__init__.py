@@ -34,7 +34,7 @@ class WebSocketProtocol(WebSocketServerProtocol):
 
     def handle_command(self, command_name, *args, **kwargs):
         """Handle a command from the other side."""
-        return self.factory.mindspace_factory.parser.handle_command(
+        return self.factory.mindspace_factory.get_parser(self).handle_command(
             command_name, self, *args, **kwargs
         )
 
@@ -111,6 +111,11 @@ class MindspaceFactory:
 
     def __attrs_post_init__(self):
         self.klein_app.mindspace_factory = self
+
+    def get_parser(self, connection):
+        """By default returns self.parser. Override to provide different parser
+        instances for different types of connection."""
+        return self.parser
 
     def run(self):
         """Listen for connections."""
